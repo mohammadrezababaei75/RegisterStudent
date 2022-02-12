@@ -135,5 +135,23 @@ namespace RegisterStudent
             else
                 FillDGVStudnts();
         }
+
+        private void dataGridViewStudents_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+        
+        }
+
+        private void dataGridViewStudents_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            int columnIndex = e.ColumnIndex;
+
+            if (columnIndex.ToString() == "8")
+            {
+                int Id=Convert.ToInt32(dataGridViewStudents.Rows[e.RowIndex].Cells["Id"].Value);
+                bool Flag=!Convert.ToBoolean(dataGridViewStudents.Rows[e.RowIndex].Cells["Graduated"].Value);
+                Student.SetStudentGraduatedStatus(Id,Flag);
+                FillDGVStudnts();
+            }
+        }
     }
 }

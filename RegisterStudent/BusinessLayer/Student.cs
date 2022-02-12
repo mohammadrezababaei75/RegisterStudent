@@ -82,5 +82,11 @@ namespace RegisterStudent.BusinessLayer
             return RegisterStudentDB.StudentNumberExist_DB(sn);
         }
 
+        public static bool SetStudentGraduatedStatus(int Id,bool Flag)
+        {
+            RegisterStudentDB db = new RegisterStudentDB();
+            return db.SetStudentGraduatedStatus_DB(Id,Flag);
+        }
+
     }
 }

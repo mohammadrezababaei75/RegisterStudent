@@ -10,7 +10,8 @@ namespace RegisterStudent.DataLayer
 {
     internal class RegisterStudentDB
     {
-        static private string connstr = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\MohammadReza\source\repos\RegisterStudent\RegisterStudent\RegisterStudent.mdf;Integrated Security=True";
+        //static private string connstr = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\MohammadReza\source\repos\RegisterStudent\RegisterStudent\RegisterStudent.mdf;Integrated Security=True";
+        static private string connstr = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename="+Application.StartupPath+@"\RegisterStudent.mdf;Integrated Security=True";
         public void SaveNewStudyField(string StudyField)
         {
             SqlConnection conn=new SqlConnection(connstr);
@@ -77,8 +78,8 @@ namespace RegisterStudent.DataLayer
             SqlDataAdapter da=new SqlDataAdapter();
             SqlCommand sqlcmd=new SqlCommand();
             sqlcmd.Connection = conn;
-            sqlcmd.CommandText = "select students.name,students.code,students.birthday,students.father_name,students.birth_certificate_no,"
-                                +"students.birth_certificate_location,students.entry_year,students.graduated,study_fields.name as study_field "
+            sqlcmd.CommandText = "select students.Id,students.name,students.code,students.birthday,students.father_name,students.birth_certificate_no,"
+                                + "students.birth_certificate_location,students.entry_year,students.graduated,study_fields.name as study_field "
                                 +"From students "
                                 +"inner join study_fields on students.study_field = study_fields.Id ORDER BY code ASC";
             da.SelectCommand = sqlcmd;
@@ -92,7 +93,7 @@ namespace RegisterStudent.DataLayer
             SqlDataAdapter da = new SqlDataAdapter();
             SqlCommand sqlcmd = new SqlCommand();
             sqlcmd.Connection = conn;
-            sqlcmd.CommandText = "select students.name,students.code,students.birthday,students.father_name,students.birth_certificate_no,"
+            sqlcmd.CommandText = "select students.Id,students.name,students.code,students.birthday,students.father_name,students.birth_certificate_no,"
                                 + "students.birth_certificate_location,students.entry_year,students.graduated,study_fields.name as study_field "
                                 + "From students "
                                 + "inner join study_fields on students.study_field = study_fields.Id "
@@ -101,6 +102,25 @@ namespace RegisterStudent.DataLayer
             da.SelectCommand = sqlcmd;
             da.Fill(dt);
             return dt;
+        }
+
+        public bool SetStudentGraduatedStatus_DB(int Id,bool Flag)
+        {
+            bool Result;
+            SqlConnection conn=new SqlConnection(connstr);
+            conn.Open();
+            SqlCommand sqlcmd = new SqlCommand();
+            sqlcmd.Connection = conn;
+            sqlcmd.CommandText = "update students set graduated=@Flag where Id=@Id";
+            sqlcmd.Parameters.AddWithValue("Flag", Flag);
+            sqlcmd.Parameters.AddWithValue("Id", Id);
+            sqlcmd.ExecuteNonQuery();
+
+            sqlcmd.CommandText = "select graduated From students Where Id=@Id";
+            //sqlcmd.Parameters.AddWithValue("Id", Id);
+            Result=Convert.ToBoolean(sqlcmd.ExecuteScalar());
+            conn.Close();
+            return Result;
         }
     }
 }
