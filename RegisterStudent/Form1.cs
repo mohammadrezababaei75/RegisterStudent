@@ -151,6 +151,7 @@ namespace RegisterStudent
                 bool Flag=!Convert.ToBoolean(dataGridViewStudents.Rows[e.RowIndex].Cells["Graduated"].Value);
                 Student.SetStudentGraduatedStatus(Id,Flag);
                 FillDGVStudnts();
+                dataGridViewStudents.Rows[e.RowIndex].Cells[8].Selected = true;
             }
         }
     }
